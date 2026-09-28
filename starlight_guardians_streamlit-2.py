@@ -1,7 +1,7 @@
-import streamlit as st
 import math
 import random
 import time
+import streamlit as st
 from streamlit_keyup import st_keyup
 
 # ============================================================
@@ -10,9 +10,7 @@ from streamlit_keyup import st_keyup
 # ============================================================
 
 st.set_page_config(
-    page_title="Starlight Guardians",
-    page_icon="⭐",
-    layout="wide"
+    page_title="Starlight Guardians", page_icon="⭐", layout="wide"
 )
 
 # ------------------------------------------------------------
@@ -24,118 +22,239 @@ CLASS_CONFIG = {
         "weapon": "Comet Claws",
         "color": "#ff4f6d",
         "base_hp": 10,
-        "base_speed": 3.4
+        "base_speed": 3.4,
     },
     "SKY MAGE": {
         "weapon": "Rainbow Cannon",
         "color": "#38d9ff",
         "base_hp": 8,
-        "base_speed": 3.0
+        "base_speed": 3.0,
     },
     "ROBO HERO": {
         "weapon": "Spark Scythe",
         "color": "#50ff7a",
         "base_hp": 9,
-        "base_speed": 3.2
+        "base_speed": 3.2,
     },
     "SHADOW SCOUT": {
         "weapon": "Moon Dagger",
         "color": "#ff55c8",
         "base_hp": 7,
-        "base_speed": 4.0
+        "base_speed": 4.0,
     },
     "COSMIC EXPLORER": {
         "weapon": "Galaxy Blade",
         "color": "#b44cff",
         "base_hp": 8,
-        "base_speed": 2.8
-    }
+        "base_speed": 2.8,
+    },
 }
 
 ENEMY_CONFIG = {
     "STAR BUG": (1.8, 2.5, 3.0, 0.5, 1, 13, "#ff55aa"),
     "ROCKET BOT": (0.9, 1.4, 4.0, 0.6, 1, 15, "#ffe044"),
     "SHIELD BOT": (1.6, 2.2, 7.0, 1.0, 1, 16, "#389cff"),
-    "MEGA BOT": (1.0, 1.4, 14.0, 1.8, 2, 24, "#ff4655")
+    "MEGA BOT": (1.0, 1.4, 14.0, 1.8, 2, 24, "#ff4655"),
 }
 
 UPGRADES = {
     "STAR RANGER": {
-        "claw_reach": {"name": "Comet Reach", "lvl": 1, "max": 5,
-                       "desc": "Wider attack range (+12 each level)"},
-        "blood_siphon": {"name": "Star Energy", "lvl": 0, "max": 5,
-                         "desc": "Chance to recover 1 HP after a hit (+5%)"},
-        "frenzy_rate": {"name": "Meteor Rush", "lvl": 0, "max": 5,
-                        "desc": "Chance to enter a speed boost"},
-        "thick_hide": {"name": "Starlight Armor", "lvl": 0, "max": 5,
-                       "desc": "Chance to block incoming damage (+8%)"},
-        "apex_roar": {"name": "Hero Cheer", "lvl": 0, "max": 5,
-                      "desc": "Defeating a Rocket Bot stuns nearby enemies"},
-        "vitality_core": {"name": "Energy Core", "lvl": 0, "max": 5,
-                          "desc": "Increases maximum HP (+2)"}
+        "claw_reach": {
+            "name": "Comet Reach",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Wider attack range (+12 each level)",
+        },
+        "blood_siphon": {
+            "name": "Star Energy",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Chance to recover 1 HP after a hit (+5%)",
+        },
+        "frenzy_rate": {
+            "name": "Meteor Rush",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Chance to enter a speed boost",
+        },
+        "thick_hide": {
+            "name": "Starlight Armor",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Chance to block incoming damage (+8%)",
+        },
+        "apex_roar": {
+            "name": "Hero Cheer",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Defeating a Rocket Bot stuns nearby enemies",
+        },
+        "vitality_core": {
+            "name": "Energy Core",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Increases maximum HP (+2)",
+        },
     },
     "SKY MAGE": {
-        "divine_spark": {"name": "Rainbow Sparks", "lvl": 0, "max": 5,
-                         "desc": "Attacks can jump between nearby enemies"},
-        "time_dilation": {"name": "Cloud Time", "lvl": 0, "max": 5,
-                          "desc": "Dash creates a short slow-motion effect"},
-        "plague_ring": {"name": "Magic Aura", "lvl": 0, "max": 5,
-                        "desc": "Nearby enemies take periodic damage"},
-        "aegis_shield": {"name": "Bubble Shield", "lvl": 1, "max": 5,
-                         "desc": "Shield returns faster"},
-        "smite_strike": {"name": "Star Strike", "lvl": 0, "max": 5,
-                         "desc": "Every 5th hit gets a bonus"},
-        "divine_grace": {"name": "Cloud Step", "lvl": 0, "max": 5,
-                         "desc": "Move faster during slow motion"}
+        "divine_spark": {
+            "name": "Rainbow Sparks",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Attacks can jump between nearby enemies",
+        },
+        "time_dilation": {
+            "name": "Cloud Time",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Dash creates a short slow-motion effect",
+        },
+        "plague_ring": {
+            "name": "Magic Aura",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Nearby enemies take periodic damage",
+        },
+        "aegis_shield": {
+            "name": "Bubble Shield",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Shield returns faster",
+        },
+        "smite_strike": {
+            "name": "Star Strike",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Every 5th hit gets a bonus",
+        },
+        "divine_grace": {
+            "name": "Cloud Step",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Move faster during slow motion",
+        },
     },
     "ROBO HERO": {
-        "thruster_fuel": {"name": "Turbo Fuel", "lvl": 1, "max": 5,
-                          "desc": "Dash cooldown is reduced"},
-        "shock_field": {"name": "Spark Field", "lvl": 0, "max": 5,
-                        "desc": "Periodically sends out a shockwave"},
-        "shrapnel_burst": {"name": "Gear Burst", "lvl": 0, "max": 5,
-                           "desc": "Picking up a star can create a small burst"},
-        "overclock": {"name": "Turbo Swing", "lvl": 1, "max": 5,
-                      "desc": "Attacks recharge faster"},
-        "nanite_armor": {"name": "Helper Shield", "lvl": 0, "max": 5,
-                         "desc": "Getting hit gives temporary protection"},
-        "plasma_blade": {"name": "Spark Blade", "lvl": 0, "max": 5,
-                         "desc": "Hits can cause extra damage over time"}
+        "thruster_fuel": {
+            "name": "Turbo Fuel",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Dash cooldown is reduced",
+        },
+        "shock_field": {
+            "name": "Spark Field",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Periodically sends out a shockwave",
+        },
+        "shrapnel_burst": {
+            "name": "Gear Burst",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Picking up a star can create a small burst",
+        },
+        "overclock": {
+            "name": "Turbo Swing",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Attacks recharge faster",
+        },
+        "nanite_armor": {
+            "name": "Helper Shield",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Getting hit gives temporary protection",
+        },
+        "plasma_blade": {
+            "name": "Spark Blade",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Hits can cause extra damage over time",
+        },
     },
     "SHADOW SCOUT": {
-        "decoy_illusion": {"name": "Buddy Decoy", "lvl": 0, "max": 5,
-                           "desc": "Dash leaves a friendly decoy"},
-        "blink_strike": {"name": "Quick Swap", "lvl": 0, "max": 5,
-                         "desc": "Swap with a nearby enemy and stun it"},
-        "fatal_precision": {"name": "Perfect Aim", "lvl": 1, "max": 5,
-                            "desc": "Critical hits become stronger"},
-        "shadow_dash": {"name": "Moon Dash", "lvl": 1, "max": 5,
-                        "desc": "Dash protection lasts longer"},
-        "executioner": {"name": "Finishing Move", "lvl": 0, "max": 5,
-                        "desc": "Very weak enemies can be finished quickly"},
-        "spirit_drift": {"name": "Moon Speed", "lvl": 0, "max": 5,
-                         "desc": "Increases movement speed"}
+        "decoy_illusion": {
+            "name": "Buddy Decoy",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Dash leaves a friendly decoy",
+        },
+        "blink_strike": {
+            "name": "Quick Swap",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Swap with a nearby enemy and stun it",
+        },
+        "fatal_precision": {
+            "name": "Perfect Aim",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Critical hits become stronger",
+        },
+        "shadow_dash": {
+            "name": "Moon Dash",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Dash protection lasts longer",
+        },
+        "executioner": {
+            "name": "Finishing Move",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Very weak enemies can be finished quickly",
+        },
+        "spirit_drift": {
+            "name": "Moon Speed",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Increases movement speed",
+        },
     },
     "COSMIC EXPLORER": {
-        "event_horizon": {"name": "Gravity Buddy", "lvl": 0, "max": 5,
-                          "desc": "Pulls nearby enemies closer"},
-        "void_collapse": {"name": "Star Burst", "lvl": 0, "max": 5,
-                          "desc": "Defeated enemies can damage nearby enemies"},
-        "void_regen": {"name": "Cosmic Regen", "lvl": 0, "max": 5,
-                       "desc": "Slowly restores health"},
-        "singularity_power": {"name": "Galaxy Core", "lvl": 1, "max": 5,
-                              "desc": "Increases attack power"},
-        "rift_slip": {"name": "Galaxy Trail", "lvl": 0, "max": 5,
-                      "desc": "Dash leaves a slowing zone"},
-        "null_barrier": {"name": "Cosmic Barrier", "lvl": 0, "max": 5,
-                         "desc": "Hits recharge your energy shield"}
-    }
+        "event_horizon": {
+            "name": "Gravity Buddy",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Pulls nearby enemies closer",
+        },
+        "void_collapse": {
+            "name": "Star Burst",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Defeated enemies can damage nearby enemies",
+        },
+        "void_regen": {
+            "name": "Cosmic Regen",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Slowly restores health",
+        },
+        "singularity_power": {
+            "name": "Galaxy Core",
+            "lvl": 1,
+            "max": 5,
+            "desc": "Increases attack power",
+        },
+        "rift_slip": {
+            "name": "Galaxy Trail",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Dash leaves a slowing zone",
+        },
+        "null_barrier": {
+            "name": "Cosmic Barrier",
+            "lvl": 0,
+            "max": 5,
+            "desc": "Hits recharge your energy shield",
+        },
+    },
 }
 
 
 # ------------------------------------------------------------
 # Session-state setup
 # ------------------------------------------------------------
+
 
 def reset_game():
     st.session_state.state = "MENU"
@@ -171,9 +290,11 @@ def add_message(message):
 
 
 def get_upgrade_level(upgrade_id):
-    return UPGRADES[st.session_state.player_class].get(
-        upgrade_id, {}
-    ).get("lvl", 0)
+    return (
+        UPGRADES[st.session_state.player_class]
+        .get(upgrade_id, {})
+        .get("lvl", 0)
+    )
 
 
 def start_new_game():
@@ -181,8 +302,7 @@ def start_new_game():
     cfg = CLASS_CONFIG[cls]
 
     hp_boost = (
-        get_upgrade_level("vitality_core") * 2
-        if cls == "STAR RANGER" else 0
+        get_upgrade_level("vitality_core") * 2 if cls == "STAR RANGER" else 0
     )
 
     st.session_state.max_hp = cfg["base_hp"] + hp_boost
@@ -206,7 +326,6 @@ def start_new_game():
 
 def spawn_wave():
     enemies = []
-
     amount = 6 + st.session_state.wave * 2
 
     for _ in range(amount):
@@ -222,7 +341,6 @@ def spawn_wave():
             x, y = 100, random.randint(5, 95)
 
         pool = ["STAR BUG"]
-
         if st.session_state.wave >= 2:
             pool.append("ROCKET BOT")
         if st.session_state.wave >= 3:
@@ -234,7 +352,6 @@ def spawn_wave():
         cfg = ENEMY_CONFIG[enemy_type]
 
         speed = random.uniform(cfg[0], cfg[1])
-
         if enemy_type == "STAR BUG":
             speed += st.session_state.wave * 0.08
         elif enemy_type == "MEGA BOT":
@@ -244,18 +361,20 @@ def spawn_wave():
 
         hp = cfg[2] + st.session_state.wave * cfg[3]
 
-        enemies.append({
-            "x": x,
-            "y": y,
-            "type": enemy_type,
-            "speed": speed,
-            "hp": hp,
-            "max_hp": hp,
-            "damage": cfg[4],
-            "size": cfg[5],
-            "color": cfg[6],
-            "stun": 0
-        })
+        enemies.append(
+            {
+                "x": x,
+                "y": y,
+                "type": enemy_type,
+                "speed": speed,
+                "hp": hp,
+                "max_hp": hp,
+                "damage": cfg[4],
+                "size": cfg[5],
+                "color": cfg[6],
+                "stun": 0,
+            }
+        )
 
     st.session_state.enemies = enemies
 
@@ -284,12 +403,12 @@ def buy_upgrade(upgrade_id):
 # Game mechanics
 # ------------------------------------------------------------
 
+
 def move_player(dx, dy):
     if st.session_state.state != "GAMEPLAY":
         return
 
     cls = st.session_state.player_class
-
     speed = CLASS_CONFIG[cls]["base_speed"]
 
     if cls == "STAR RANGER" and st.session_state.frenzy_timer > 0:
@@ -328,7 +447,6 @@ def update_enemies():
         dist = max(0.01, math.hypot(dx, dy))
 
         speed = enemy["speed"] * slow_factor
-
         enemy["x"] += dx / dist * speed
         enemy["y"] += dy / dist * speed
 
@@ -365,8 +483,7 @@ def update_enemies():
         if st.session_state.regen_timer >= max(5, 25 - regen_lvl * 3):
             st.session_state.regen_timer = 0
             st.session_state.player_hp = min(
-                st.session_state.max_hp,
-                st.session_state.player_hp + 1
+                st.session_state.max_hp, st.session_state.player_hp + 1
             )
             add_message("💚 Cosmic Regen restored 1 HP!")
 
@@ -376,7 +493,7 @@ def update_enemies():
         for enemy in st.session_state.enemies:
             dist = math.hypot(
                 enemy["x"] - st.session_state.player_x,
-                enemy["y"] - st.session_state.player_y
+                enemy["y"] - st.session_state.player_y,
             )
             if dist < aura_lvl * 8:
                 enemy["hp"] -= aura_lvl * 0.5
@@ -389,7 +506,7 @@ def update_enemies():
             for enemy in st.session_state.enemies:
                 dist = math.hypot(
                     enemy["x"] - st.session_state.player_x,
-                    enemy["y"] - st.session_state.player_y
+                    enemy["y"] - st.session_state.player_y,
                 )
                 if dist < radius:
                     enemy["hp"] -= shock_lvl * 1.5
@@ -409,8 +526,7 @@ def take_damage(amount):
 
     # Starlight Armor
     block_chance = (
-        get_upgrade_level("thick_hide") * 0.08
-        if cls == "STAR RANGER" else 0
+        get_upgrade_level("thick_hide") * 0.08 if cls == "STAR RANGER" else 0
     )
 
     if random.random() < block_chance:
@@ -448,17 +564,16 @@ def attack():
         st.session_state.enemies,
         key=lambda e: math.hypot(
             e["x"] - st.session_state.player_x,
-            e["y"] - st.session_state.player_y
-        )
+            e["y"] - st.session_state.player_y,
+        ),
     )
 
     dist = math.hypot(
         target["x"] - st.session_state.player_x,
-        target["y"] - st.session_state.player_y
+        target["y"] - st.session_state.player_y,
     )
 
     attack_range = 14
-
     if cls == "STAR RANGER":
         attack_range += get_upgrade_level("claw_reach") * 1.2
 
@@ -495,8 +610,7 @@ def attack():
             for other in st.session_state.enemies:
                 if other is not target:
                     d = math.hypot(
-                        other["x"] - target["x"],
-                        other["y"] - target["y"]
+                        other["x"] - target["x"], other["y"] - target["y"]
                     )
                     if d < 18:
                         other["hp"] -= spark_lvl * 1.5
@@ -521,8 +635,7 @@ def attack():
     if cls == "STAR RANGER" and siphon > 0:
         if random.random() < siphon * 0.05:
             st.session_state.player_hp = min(
-                st.session_state.max_hp,
-                st.session_state.player_hp + 1
+                st.session_state.max_hp, st.session_state.player_hp + 1
             )
             add_message("❤️ Star Energy restored 1 HP!")
 
@@ -538,8 +651,7 @@ def attack():
         barrier = get_upgrade_level("null_barrier")
         if barrier > 0:
             st.session_state.shield_energy = min(
-                100,
-                st.session_state.shield_energy + damage * barrier * 2
+                100, st.session_state.shield_energy + damage * barrier * 2
             )
 
     cleanup_enemies()
@@ -555,16 +667,13 @@ def dash():
         return
 
     st.session_state.dash_cooldown = max(
-        2,
-        8 - get_upgrade_level("thruster_fuel")
+        2, 8 - get_upgrade_level("thruster_fuel")
     )
-
     st.session_state.invincible_timer = max(
-        st.session_state.invincible_timer,
-        2 + get_upgrade_level("shadow_dash")
+        st.session_state.invincible_timer, 2 + get_upgrade_level("shadow_dash")
     )
 
-    # Move toward the center of the board.
+    # Move toward the center of the board
     dx = 50 - st.session_state.player_x
     dy = 50 - st.session_state.player_y
     dist = max(1, math.hypot(dx, dy))
@@ -588,16 +697,19 @@ def dash():
                 st.session_state.enemies,
                 key=lambda e: math.hypot(
                     e["x"] - st.session_state.player_x,
-                    e["y"] - st.session_state.player_y
-                )
+                    e["y"] - st.session_state.player_y,
+                ),
             )
             d = math.hypot(
                 target["x"] - st.session_state.player_x,
-                target["y"] - st.session_state.player_y
+                target["y"] - st.session_state.player_y,
             )
 
             if d < 30:
-                old_x, old_y = st.session_state.player_x, st.session_state.player_y
+                old_x, old_y = (
+                    st.session_state.player_x,
+                    st.session_state.player_y,
+                )
                 st.session_state.player_x = target["x"]
                 st.session_state.player_y = target["y"]
                 target["x"] = old_x
@@ -629,7 +741,6 @@ def collect_star():
 
 def cleanup_enemies():
     defeated = []
-
     for enemy in st.session_state.enemies:
         if enemy["hp"] <= 0:
             defeated.append(enemy)
@@ -642,10 +753,9 @@ def cleanup_enemies():
         st.session_state.score += int(enemy["max_hp"] * 10)
 
         if random.random() < 0.75:
-            st.session_state.collectible_shards.append({
-                "x": enemy["x"],
-                "y": enemy["y"]
-            })
+            st.session_state.collectible_shards.append(
+                {"x": enemy["x"], "y": enemy["y"]}
+            )
 
         # Hero Cheer
         if (
@@ -655,8 +765,7 @@ def cleanup_enemies():
         ):
             for other in st.session_state.enemies:
                 d = math.hypot(
-                    other["x"] - enemy["x"],
-                    other["y"] - enemy["y"]
+                    other["x"] - enemy["x"], other["y"] - enemy["y"]
                 )
                 if d < 20:
                     other["stun"] = 2
@@ -669,8 +778,7 @@ def cleanup_enemies():
             lvl = get_upgrade_level("void_collapse")
             for other in st.session_state.enemies:
                 d = math.hypot(
-                    other["x"] - enemy["x"],
-                    other["y"] - enemy["y"]
+                    other["x"] - enemy["x"], other["y"] - enemy["y"]
                 )
                 if d < 15:
                     other["hp"] -= lvl * 2
@@ -682,10 +790,10 @@ def cleanup_enemies():
         st.session_state.state = "SHOP"
 
 
+# ------------------------------------------------------------
+# Keyboard controls via streamlit-keyup
+# ------------------------------------------------------------
 
-# ------------------------------------------------------------
-# Keyboard controls
-# ------------------------------------------------------------
 
 def keyboard_controls():
     st.markdown(
@@ -705,42 +813,36 @@ def keyboard_controls():
         }
         </style>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
-    key = st_keyup(
-        "Keyboard controls",
-        key="game_keyboard",
-        debounce=100
+    # st_keyup captures typing text changes on every keystroke
+    key_input = st_keyup(
+        "Keyboard controls", key="game_keyboard", debounce=50, value=""
     )
 
-    if not key:
+    if not key_input:
         return
 
-    key = str(key).lower()
+    # Check the latest character/command entered
+    key = str(key_input).strip().lower()
+    # Reset input field via session state if needed or process last character
+    last_char = key[-1] if len(key) > 0 else ""
 
-    if key in ("arrowup", "w"):
+    if last_char in ("w", "8"):
         move_player(0, -1)
         st.rerun()
-
-    elif key in ("arrowdown", "s"):
+    elif last_char in ("s", "2"):
         move_player(0, 1)
         st.rerun()
-
-    elif key in ("arrowleft", "a"):
+    elif last_char in ("a", "4"):
         move_player(-1, 0)
         st.rerun()
-
-    elif key in ("arrowright", "d"):
+    elif last_char in ("d", "6"):
         move_player(1, 0)
         st.rerun()
-
-    elif key in (" ", "space"):
+    elif last_char == " ":
         dash()
-        st.rerun()
-
-    elif key in ("enter",):
-        attack()
         st.rerun()
 
 
@@ -748,10 +850,9 @@ def keyboard_controls():
 # UI
 # ------------------------------------------------------------
 
-def show_board():
-    # HTML board that replaces the Pygame canvas.
-    items = []
 
+def show_board():
+    items = []
     px = st.session_state.player_x
     py = st.session_state.player_y
     color = CLASS_CONFIG[st.session_state.player_class]["color"]
@@ -763,13 +864,12 @@ def show_board():
 
     for enemy in st.session_state.enemies:
         hp_ratio = max(0, min(1, enemy["hp"] / enemy["max_hp"]))
-
         items.append(
             f'<div class="enemy" title="{enemy["type"]}" '
             f'style="left:{enemy["x"]}%;top:{enemy["y"]}%;'
             f'background:{enemy["color"]};">'
             f'🤖<span class="hp" style="width:{hp_ratio*100}%"></span>'
-            f'</div>'
+            f"</div>"
         )
 
     for star in st.session_state.collectible_shards:
@@ -838,7 +938,7 @@ def show_board():
         </style>
         <div class="game-board">{board}</div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
 
@@ -848,7 +948,6 @@ def show_hud():
     shield = int(st.session_state.shield_energy)
 
     c1, c2, c3, c4 = st.columns(4)
-
     c1.metric("❤️ HP", f"{hp}/{max_hp}")
     c2.metric("🛡️ Energy", f"{shield}%")
     c3.metric("⭐ Stars", st.session_state.shards)
@@ -857,40 +956,31 @@ def show_hud():
 
 def show_controls():
     st.subheader("🎮 Controls")
-
     c1, c2, c3 = st.columns(3)
 
     with c1:
         if st.button("⬆️ Move Up", use_container_width=True):
             move_player(0, -1)
-
     with c2:
         if st.button("⚔️ ATTACK", use_container_width=True, type="primary"):
             attack()
-
     with c3:
         if st.button("⬇️ Move Down", use_container_width=True):
             move_player(0, 1)
 
     c1, c2, c3 = st.columns(3)
-
     with c1:
         if st.button("⬅️ Move Left", use_container_width=True):
             move_player(-1, 0)
-
     with c2:
         if st.button("💨 DASH", use_container_width=True):
             dash()
-
     with c3:
         if st.button("➡️ Move Right", use_container_width=True):
             move_player(1, 0)
 
     if st.session_state.collectible_shards:
-        if st.button(
-            "⭐ Collect Nearby Star",
-            use_container_width=True
-        ):
+        if st.button("⭐ Collect Nearby Star", use_container_width=True):
             collect_star()
 
 
@@ -903,20 +993,17 @@ def show_shop():
 
     upgrades = UPGRADES[st.session_state.player_class]
 
-    for i, (upgrade_id, upgrade) in enumerate(upgrades.items()):
+    for upgrade_id, upgrade in upgrades.items():
         lvl = upgrade["lvl"]
         cost = 5 + lvl * 8
 
         with st.container(border=True):
             c1, c2, c3 = st.columns([2, 4, 1])
-
             with c1:
                 st.markdown(f"### {upgrade['name']}")
                 st.write(f"Level {lvl}/{upgrade['max']}")
-
             with c2:
                 st.write(upgrade["desc"])
-
             with c3:
                 if lvl >= upgrade["max"]:
                     st.success("MAX")
@@ -924,17 +1011,14 @@ def show_shop():
                     if st.button(
                         f"⭐ {cost}",
                         key=f"upgrade_{upgrade_id}",
-                        use_container_width=True
+                        use_container_width=True,
                     ):
                         buy_upgrade(upgrade_id)
                         st.rerun()
 
     st.divider()
-
     if st.button(
-        "🚀 Start Next Wave",
-        type="primary",
-        use_container_width=True
+        "🚀 Start Next Wave", type="primary", use_container_width=True
     ):
         spawn_wave()
         st.session_state.state = "GAMEPLAY"
@@ -944,27 +1028,21 @@ def show_shop():
 def show_menu():
     st.title("⭐ STARLIGHT GUARDIANS")
     st.subheader("🌈 Five Cosmic Heroes")
-
     st.write(
         "Choose a hero, explore the arena, collect stars, "
         "upgrade your abilities, and protect the galaxy!"
     )
 
     names = list(CLASS_CONFIG.keys())
-
     selected = st.selectbox(
-        "Choose your hero",
-        names,
-        index=st.session_state.class_selection
+        "Choose your hero", names, index=st.session_state.class_selection
     )
 
     st.session_state.player_class = selected
     st.session_state.class_selection = names.index(selected)
-
     cfg = CLASS_CONFIG[selected]
 
     c1, c2 = st.columns(2)
-
     with c1:
         st.markdown(f"## {selected}")
         st.write(f"**Special Tool:** {cfg['weapon']}")
@@ -974,19 +1052,22 @@ def show_menu():
     with c2:
         descriptions = {
             "STAR RANGER": "A brave hero with strong attacks and extra armor.",
-            "SKY MAGE": "A magical hero with a protective bubble and special powers.",
-            "ROBO HERO": "A helpful robot with sparks, shields, and turbo abilities.",
-            "SHADOW SCOUT": "A quick explorer with strong critical hits and dashes.",
-            "COSMIC EXPLORER": "A space adventurer who uses gravity and galaxy energy."
+            "SKY MAGE": (
+                "A magical hero with a protective bubble and special powers."
+            ),
+            "ROBO HERO": (
+                "A helpful robot with sparks, shields, and turbo abilities."
+            ),
+            "SHADOW SCOUT": (
+                "A quick explorer with strong critical hits and dashes."
+            ),
+            "COSMIC EXPLORER": (
+                "A space adventurer who uses gravity and galaxy energy."
+            ),
         }
-
         st.info(descriptions[selected])
 
-    if st.button(
-        "🚀 Start Adventure",
-        type="primary",
-        use_container_width=True
-    ):
+    if st.button("🚀 Start Adventure", type="primary", use_container_width=True):
         st.session_state.state = "GAMEPLAY"
         start_new_game()
         st.rerun()
@@ -994,32 +1075,23 @@ def show_menu():
 
 def show_game_over():
     st.title("🌟 Adventure Complete!")
-
     st.metric("🌊 Waves Survived", st.session_state.wave)
     st.metric("🏆 Total Score", st.session_state.score)
-
     st.write(
         "Great job! Your cosmic adventure is over. "
         "You can restart and try a different hero."
     )
 
     c1, c2 = st.columns(2)
-
     with c1:
         if st.button(
-            "🔄 Play Again",
-            type="primary",
-            use_container_width=True
+            "🔄 Play Again", type="primary", use_container_width=True
         ):
             st.session_state.state = "GAMEPLAY"
             start_new_game()
             st.rerun()
-
     with c2:
-        if st.button(
-            "🏠 Return to Hero Select",
-            use_container_width=True
-        ):
+        if st.button("🏠 Return to Hero Select", use_container_width=True):
             st.session_state.state = "MENU"
             st.rerun()
 
@@ -1042,23 +1114,18 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 if st.session_state.state == "MENU":
     show_menu()
-
 elif st.session_state.state == "GAMEPLAY":
     st.title("⭐ STARLIGHT GUARDIANS")
-
     show_hud()
     show_board()
-
     st.write("")
-
     st.info(
-        "⌨️ **Keyboard:** Arrow Keys or WASD = Move  •  "
-        "Space = Dash  •  Enter = Attack"
+        "⌨️ **Keyboard:** Type W/A/S/D to Move • Space = Dash • Or use buttons below!"
     )
 
     keyboard_controls()
@@ -1067,18 +1134,12 @@ elif st.session_state.state == "GAMEPLAY":
         show_controls()
 
     st.divider()
-
     st.subheader("📜 Adventure Log")
 
     for message in st.session_state.messages:
         st.write(message)
 
-    if st.button("🏠 Return to Menu"):
-        st.session_state.state = "MENU"
-        st.rerun()
-
 elif st.session_state.state == "SHOP":
     show_shop()
-
 elif st.session_state.state == "GAME_OVER":
     show_game_over()
