@@ -3,39 +3,39 @@ import streamlit as st
 
 # Page Configuration
 st.set_page_config(
-    page_title="Wild Data Arena - Arcade", page_icon="🔥", layout="centered"
+    page_title="Laser Ninja Arcade", page_icon="⚡", layout="centered"
 )
 
-# Custom Arcade Styling & Animations
+# Arcade Styling
 st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background: linear-gradient(135deg, #1f4068, #162447, #1b1b2f);
         color: white;
     }
     .stButton>button {
         width: 100%;
-        background: linear-gradient(45deg, #ff416c, #ff4b2b);
+        background: linear-gradient(45deg, #e94560, #f08a5d);
         color: white;
         font-weight: 900;
         font-size: 1.2rem;
         border-radius: 12px;
         padding: 0.75rem;
         border: 2px solid #fff;
-        box-shadow: 0px 4px 15px rgba(255, 75, 43, 0.4);
+        box-shadow: 0px 4px 15px rgba(233, 69, 96, 0.5);
         transition: 0.2s;
     }
     .stButton>button:hover {
         transform: scale(1.02);
-        background: linear-gradient(45deg, #ff4b2b, #ff416c);
+        background: linear-gradient(45deg, #f08a5d, #e94560);
     }
-    .arcade-box {
+    .arena-box {
         background: rgba(255, 255, 255, 0.05);
-        border: 2px solid #00f2fe;
+        border: 2px solid #e94560;
         padding: 20px;
         border-radius: 15px;
-        box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
         text-align: center;
     }
     </style>
@@ -45,188 +45,131 @@ st.markdown(
 
 # Header
 st.markdown(
-    "<h1 style='text-align: center; color: #00f2fe; text-shadow: 0 0 10px"
-    " #00f2fe;'>🕹️ WILD DATA ARENA 🕹️</h1>",
+    "<h1 style='text-align: center; color: #f08a5d; text-shadow: 0 0 10px"
+    " #f08a5d;'>⚡ LASER NINJA ARCADE ⚡</h1>",
     unsafe_allow_html=True,
 )
 st.markdown(
-    "<h3 style='text-align: center; color: #ff0844;'>💥 BOSS BATTLE"
-    " EDITION 💥</h3>",
+    "<h3 style='text-align: center; color: #e94560;'>🔥 BATTLE THE"
+    " CYBER-THREATS! 🔥</h3>",
     unsafe_allow_html=True,
 )
 st.markdown("---")
 
-# Action Database: Fixed all keys to include 'desc' safely
-bosses = [
+# Threat Database
+threats = [
     {
-        "name": "🐨 THE KOALA SLEEP MONSTER",
-        "category": "ANIMAL BOSS",
-        "stat_name": "Daily Nap Time",
-        "value": 22,
-        "unit": "Hours",
-        "desc": (
-            "Spends almost the entire day completely knocked out in the trees!"
-        ),
-        "taunt": "I sleep through entire seasons, human! Try to match my laziness!",
-        "image": "💤",
+        "name": "🤖 CYBER-ZOMBIE",
+        "desc": "A mechanical monster is charging right at you!",
+        "correct_move": "⚔️ Sword Slash",
+        "image": "🦾",
     },
     {
-        "name": "🐌 THE 14,000-TOOTH BEAST",
-        "category": "MUTANT SLUG",
-        "stat_name": "Teeth Count",
-        "value": 14000,
-        "unit": "Teeth",
-        "desc": (
-            "Has a tongue covered in thousands of microscopic teeth like a"
-            " conveyor belt!"
-        ),
-        "taunt": "You can't brush fast enough for this smile!",
-        "image": "🦷",
+        "name": "🔥 PLASMA DRAGON",
+        "desc": "Spitting a wave of burning digital fire!",
+        "correct_move": "🛡️ Energy Shield",
+        "image": "🐉",
     },
     {
-        "name": "🐋 BLUE WHALE TITAN",
-        "category": "OCEAN COLOSSUS",
-        "stat_name": "Tongue Weight",
-        "value": 7000,
-        "unit": "Pounds",
-        "desc": "Its tongue alone weighs as much as an entire adult elephant!",
-        "taunt": "I'm too heavy for your scoreboard!",
-        "image": "🌊",
+        "name": "☄️ METEOR SHOWER",
+        "desc": "Raining burning space rocks from above!",
+        "correct_move": "🏃‍♂️ Super Jump",
+        "image": "🌋",
     },
     {
-        "name": "🪐 SATURN THE SPACE FLOAT",
-        "category": "PLANETARY ALIEN",
-        "stat_name": "Bathtub Float Level",
-        "value": 1,
-        "unit": "Status (1=Yes)",
-        "desc": (
-            "Made mostly of gas, meaning it would float if you had a big"
-            " enough bathtub!"
-        ),
-        "taunt": "Catch me if you can, I'm floating away!",
-        "image": "🛸",
-    },
-    {
-        "name": "☁️ MEGA-CLOUD 9000",
-        "category": "SKY TORNADO",
-        "stat_name": "Cloud Weight",
-        "value": 1100000,
-        "unit": "Pounds",
-        "desc": (
-            "Looks light as a feather, but it's packed with millions of"
-            " gallons of water drops!"
-        ),
-        "taunt": "I'm about to rain destruction on your score!",
+        "name": "👻 LASER GHOST",
+        "desc": "Phasing through walls with a blinding energy beam!",
+        "correct_move": "🛡️ Energy Shield",
         "image": "⚡",
-    },
-    {
-        "name": "⏳ VENUS TIME-WARP",
-        "category": "TIME MASTER",
-        "stat_name": "Hours in a Day",
-        "value": 5832,
-        "unit": "Hours",
-        "desc": (
-            "Spins so slowly that its day is actually longer than its whole"
-            " year!"
-        ),
-        "taunt": "Time means nothing to my slow-motion spin!",
-        "image": "🌀",
     },
 ]
 
 # Initialize Game State
 if "score" not in st.session_state:
   st.session_state.score = 0
+if "health" not in st.session_state:
+  st.session_state.health = 3
 if "streak" not in st.session_state:
   st.session_state.streak = 0
-if "round" not in st.session_state:
-  st.session_state.round = 1
-if "current_boss" not in st.session_state:
-  st.session_state.current_boss = random.choice(bosses)
+if "current_threat" not in st.session_state:
+  st.session_state.current_threat = random.choice(threats)
 
-boss = st.session_state.current_boss
+threat = st.session_state.current_threat
 
 # HUD Display
-col_hud1, col_hud2, col_hud3 = st.columns(3)
-with col_hud1:
+col1, col2, col3 = st.columns(3)
+with col1:
   st.metric("🏆 SCORE", st.session_state.score)
-with col_hud2:
+with col2:
+  st.metric("❤️ HEALTH", "💖" * st.session_state.health)
+with col3:
   st.metric("🔥 STREAK", f"x{st.session_state.streak}")
-with col_hud3:
-  st.metric("⚡ STAGE", st.session_state.round)
 
 st.markdown("---")
 
-# Boss Arena Box
+# Threat Arena Box
 st.markdown(
     f"""
-    <div class="arcade-box">
-        <h2>{boss['image']} {boss['name']}</h2>
-        <p style="color: #00f2fe; font-weight: bold; font-size: 1.1rem;">CLASS: {boss['category']}</p>
-        <p style="font-style: italic; color: #ffecd2;">"{boss['taunt']}"</p>
+    <div class="arena-box">
+        <h2>{threat['image']} {threat['name']}</h2>
+        <p style="font-size: 1.2rem; color: #ffecd2;">{threat['desc']}</p>
     </div>
 """,
     unsafe_allow_html=True,
 )
 
-st.markdown(f"### 🎯 MISSION: Guess the **{boss['stat_name']}** ({boss['unit']})!")
+st.markdown("### 🎮 CHOOSE YOUR COMBAT MOVE:")
 
-# Dynamic Slider
-max_limit = int(boss["value"] * 2) if boss["value"] > 1 else 10
-player_guess = st.slider(
-    "POWER SLIDER:",
-    min_value=0,
-    max_value=max_limit,
-    value=int(boss["value"] / 2),
-    step=1,
-)
+# Action Buttons
+moves = ["⚔️ Sword Slash", "🛡️ Energy Shield", "🏃‍♂️ Super Jump"]
 
-# Attack Button
-if st.button("💥 STRIKE WITH GUESS!"):
-  target_val = boss["value"]
-  difference = abs(player_guess - target_val)
+col_a, col_b, col_c = st.columns(3)
 
-  if player_guess == target_val:
+player_choice = None
+with col_a:
+  if st.button(moves[0]):
+    player_choice = moves[0]
+with col_b:
+  if st.button(moves[1]):
+    player_choice = moves[1]
+with col_c:
+  if st.button(moves[2]):
+    player_choice = moves[2]
+
+# Handle Choice Logic
+if player_choice:
+  if player_choice == threat["correct_move"]:
     st.balloons()
-    st.markdown(
-        "<h2 style='text-align: center; color: #00ff00;'>⚡ CRITICAL HIT!"
-        " BULLSEYE! ⚡</h2>",
-        unsafe_allow_html=True,
-    )
-    st.session_state.score += 50
-    st.session_state.streak += 1
-  elif difference <= target_val * 0.15:
-    st.markdown(
-        "<h2 style='text-align: center; color: #00f2fe;'>🔥 SUPER EFFECTIVE!"
-        " SO CLOSE! 🔥</h2>",
-        unsafe_allow_html=True,
-    )
-    st.session_state.score += 25
+    st.success("💥 PERFECT COUNTER! Enemy defeated!")
+    st.session_state.score += 100
     st.session_state.streak += 1
   else:
-    st.markdown(
-        "<h2 style='text-align: center; color: #ff4b2b;'>💥 BOSS COUNTERED!"
-        " YOU MISSED! 💥</h2>",
-        unsafe_allow_html=True,
+    st.error(
+        f"❌ BAD MOVE! The threat required a **{threat['correct_move']}**!"
     )
+    st.session_state.health -= 1
     st.session_state.streak = 0
 
-  st.info(
-      f"🛡️ **Boss Real Stat:** {target_val} {boss['unit']}! — {boss['desc']}"
-  )
+  # Check Game Over
+  if st.session_state.health <= 0:
+    st.error("💀 GAME OVER! Your health ran out!")
+    if st.button("🔄 PLAY AGAIN"):
+      st.session_state.score = 0
+      st.session_state.health = 3
+      st.session_state.streak = 0
+      st.session_state.current_threat = random.choice(threats)
+      st.rerun()
+  else:
+    # Next Threat
+    st.session_state.current_threat = random.choice(threats)
+    if st.button("⚡ NEXT ROUND"):
+      st.rerun()
 
-  # Next Stage setup
-  st.session_state.round += 1
-  st.session_state.current_boss = random.choice(bosses)
-
-  if st.button("🚀 NEXT BOSS STAGE"):
-    st.rerun()
-
-# Reset Arcade Button
+# Hard Reset Button
 st.markdown("---")
-if st.button("🔄 HARD RESET ARCADE"):
+if st.button("🔄 RESET GAME"):
   st.session_state.score = 0
+  st.session_state.health = 3
   st.session_state.streak = 0
-  st.session_state.round = 1
-  st.session_state.current_boss = random.choice(bosses)
+  st.session_state.current_threat = random.choice(threats)
   st.rerun()
