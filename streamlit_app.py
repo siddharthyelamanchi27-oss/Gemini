@@ -2,11 +2,9 @@ import math
 import random
 import time
 import streamlit as st
-from streamlit_keyup import st_keyup
 
 # ============================================================
-# STARLIGHT GUARDIANS
-# Streamlit version of the original game
+# STARLIGHT GUARDIANS (No external dependencies version)
 # ============================================================
 
 st.set_page_config(
@@ -559,7 +557,6 @@ def attack():
 
     cls = st.session_state.player_class
 
-    # Attack the closest enemy
     target = min(
         st.session_state.enemies,
         key=lambda e: math.hypot(
@@ -584,11 +581,9 @@ def attack():
 
     damage = 2.0
 
-    # Galaxy Core
     if cls == "COSMIC EXPLORER":
         damage *= 1 + get_upgrade_level("singularity_power") * 0.15
 
-    # Perfect Aim
     critical = False
     crit_lvl = get_upgrade_level("fatal_precision")
 
@@ -596,14 +591,12 @@ def attack():
         critical = True
         damage *= 2.0 + crit_lvl * 0.4
 
-    # Star Ranger Meteor Rush
     if cls == "STAR RANGER":
         frenzy_lvl = get_upgrade_level("frenzy_rate")
         if frenzy_lvl > 0 and random.random() < frenzy_lvl * 0.15:
             st.session_state.frenzy_timer = 3
             add_message("☄️ Meteor Rush activated!")
 
-    # Rainbow Sparks
     if cls == "SKY MAGE":
         spark_lvl = get_upgrade_level("divine_spark")
         if spark_lvl > 0 and random.random() < 0.35:
@@ -616,7 +609,6 @@ def attack():
                         other["hp"] -= spark_lvl * 1.5
                         break
 
-    # Spark Blade
     if cls == "ROBO HERO":
         plasma_lvl = get_upgrade_level("plasma_blade")
         if plasma_lvl > 0 and random.random() < 0.4:
@@ -630,7 +622,6 @@ def attack():
     else:
         add_message(f"✨ Attack dealt {damage:.1f} damage")
 
-    # Star Energy
     siphon = get_upgrade_level("blood_siphon")
     if cls == "STAR RANGER" and siphon > 0:
         if random.random() < siphon * 0.05:
@@ -639,14 +630,12 @@ def attack():
             )
             add_message("❤️ Star Energy restored 1 HP!")
 
-    # Cloud Time
     if cls == "SKY MAGE" and get_upgrade_level("time_dilation") > 0:
         if random.random() < 0.15:
             st.session_state.slow_timer = (
                 get_upgrade_level("time_dilation") * 2
             )
 
-    # Cosmic Barrier
     if cls == "COSMIC EXPLORER":
         barrier = get_upgrade_level("null_barrier")
         if barrier > 0:
@@ -673,7 +662,6 @@ def dash():
         st.session_state.invincible_timer, 2 + get_upgrade_level("shadow_dash")
     )
 
-    # Move toward the center of the board
     dx = 50 - st.session_state.player_x
     dy = 50 - st.session_state.player_y
     dist = max(1, math.hypot(dx, dy))
@@ -757,7 +745,6 @@ def cleanup_enemies():
                 {"x": enemy["x"], "y": enemy["y"]}
             )
 
-        # Hero Cheer
         if (
             st.session_state.player_class == "STAR RANGER"
             and enemy["type"] == "ROCKET BOT"
@@ -770,7 +757,6 @@ def cleanup_enemies():
                 if d < 20:
                     other["stun"] = 2
 
-        # Star Burst
         if (
             st.session_state.player_class == "COSMIC EXPLORER"
             and get_upgrade_level("void_collapse") > 0
@@ -788,62 +774,6 @@ def cleanup_enemies():
     if not st.session_state.enemies:
         st.session_state.wave += 1
         st.session_state.state = "SHOP"
-
-
-# ------------------------------------------------------------
-# Keyboard controls via streamlit-keyup
-# ------------------------------------------------------------
-
-
-def keyboard_controls():
-    st.markdown(
-        """
-        <style>
-        div[data-testid="stTextInput"] input {
-            height: 1px;
-            min-height: 1px;
-            padding: 0;
-            border: 0;
-            opacity: 0;
-            position: absolute;
-            left: -9999px;
-        }
-        div[data-testid="stTextInput"] label {
-            display: none;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    # st_keyup captures typing text changes on every keystroke
-    key_input = st_keyup(
-        "Keyboard controls", key="game_keyboard", debounce=50, value=""
-    )
-
-    if not key_input:
-        return
-
-    # Check the latest character/command entered
-    key = str(key_input).strip().lower()
-    # Reset input field via session state if needed or process last character
-    last_char = key[-1] if len(key) > 0 else ""
-
-    if last_char in ("w", "8"):
-        move_player(0, -1)
-        st.rerun()
-    elif last_char in ("s", "2"):
-        move_player(0, 1)
-        st.rerun()
-    elif last_char in ("a", "4"):
-        move_player(-1, 0)
-        st.rerun()
-    elif last_char in ("d", "6"):
-        move_player(1, 0)
-        st.rerun()
-    elif last_char == " ":
-        dash()
-        st.rerun()
 
 
 # ------------------------------------------------------------
@@ -961,27 +891,36 @@ def show_controls():
     with c1:
         if st.button("⬆️ Move Up", use_container_width=True):
             move_player(0, -1)
+            st.rerun()
     with c2:
-        if st.button("⚔️ ATTACK", use_container_width=True, type="primary"):
+        if st.button(
+            "⚔️ ATTACK", use_container_width=True, type="primary"
+        ):
             attack()
+            st.rerun()
     with c3:
         if st.button("⬇️ Move Down", use_container_width=True):
             move_player(0, 1)
+            st.rerun()
 
     c1, c2, c3 = st.columns(3)
     with c1:
         if st.button("⬅️ Move Left", use_container_width=True):
             move_player(-1, 0)
+            st.rerun()
     with c2:
         if st.button("💨 DASH", use_container_width=True):
             dash()
+            st.rerun()
     with c3:
         if st.button("➡️ Move Right", use_container_width=True):
             move_player(1, 0)
+            st.rerun()
 
     if st.session_state.collectible_shards:
         if st.button("⭐ Collect Nearby Star", use_container_width=True):
             collect_star()
+            st.rerun()
 
 
 def show_shop():
@@ -1124,14 +1063,7 @@ elif st.session_state.state == "GAMEPLAY":
     show_hud()
     show_board()
     st.write("")
-    st.info(
-        "⌨️ **Keyboard:** Type W/A/S/D to Move • Space = Dash • Or use buttons below!"
-    )
-
-    keyboard_controls()
-
-    with st.expander("🖱️ Mouse/Touch Controls", expanded=False):
-        show_controls()
+    show_controls()
 
     st.divider()
     st.subheader("📜 Adventure Log")
