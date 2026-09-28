@@ -56,7 +56,7 @@ st.markdown(
 )
 st.markdown("---")
 
-# Action Database: Extreme Stats & Bosses
+# Action Database: Fixed all keys to include 'desc' safely
 bosses = [
     {
         "name": "🐨 THE KOALA SLEEP MONSTER",
@@ -64,6 +64,9 @@ bosses = [
         "stat_name": "Daily Nap Time",
         "value": 22,
         "unit": "Hours",
+        "desc": (
+            "Spends almost the entire day completely knocked out in the trees!"
+        ),
         "taunt": "I sleep through entire seasons, human! Try to match my laziness!",
         "image": "💤",
     },
@@ -73,7 +76,10 @@ bosses = [
         "stat_name": "Teeth Count",
         "value": 14000,
         "unit": "Teeth",
-        "desc": "Chewing everything in sight with a conveyor belt of doom!",
+        "desc": (
+            "Has a tongue covered in thousands of microscopic teeth like a"
+            " conveyor belt!"
+        ),
         "taunt": "You can't brush fast enough for this smile!",
         "image": "🦷",
     },
@@ -83,7 +89,7 @@ bosses = [
         "stat_name": "Tongue Weight",
         "value": 7000,
         "unit": "Pounds",
-        "desc": "My tongue alone weighs as much as a heavy truck!",
+        "desc": "Its tongue alone weighs as much as an entire adult elephant!",
         "taunt": "I'm too heavy for your scoreboard!",
         "image": "🌊",
     },
@@ -93,7 +99,10 @@ bosses = [
         "stat_name": "Bathtub Float Level",
         "value": 1,
         "unit": "Status (1=Yes)",
-        "desc": "Made of gas—ready to float in a cosmic bathtub!",
+        "desc": (
+            "Made mostly of gas, meaning it would float if you had a big"
+            " enough bathtub!"
+        ),
         "taunt": "Catch me if you can, I'm floating away!",
         "image": "🛸",
     },
@@ -103,7 +112,10 @@ bosses = [
         "stat_name": "Cloud Weight",
         "value": 1100000,
         "unit": "Pounds",
-        "desc": "Looks fluffy, but packs a million pounds of rain power!",
+        "desc": (
+            "Looks light as a feather, but it's packed with millions of"
+            " gallons of water drops!"
+        ),
         "taunt": "I'm about to rain destruction on your score!",
         "image": "⚡",
     },
@@ -113,7 +125,10 @@ bosses = [
         "stat_name": "Hours in a Day",
         "value": 5832,
         "unit": "Hours",
-        "desc": "Spins so slow that a single day takes longer than a year!",
+        "desc": (
+            "Spins so slowly that its day is actually longer than its whole"
+            " year!"
+        ),
         "taunt": "Time means nothing to my slow-motion spin!",
         "image": "🌀",
     },
