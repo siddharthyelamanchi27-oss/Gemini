@@ -215,13 +215,21 @@ for upg_name, details in current_data["upgrades"].items():
 st.markdown("---")
 
 # Action Simulation Button
+# Action Simulation Button
 if st.button("🚀 LAUNCH SIMULATION ARENA RUN"):
   earned = random.randint(15, 35)
   st.session_state.energy_cells += earned
   st.session_state.score += 100
   st.balloons()
+  # Store the last earned amount in session state to display it persistently
+  st.session_state.last_earned = earned
   st.success(
-      f"🎉 Simulation complete! Collected **{earned} Energy Cells** and 100"
+      f"🎉 Simulation complete! You collected **{earned} Energy Cells** and 100"
       " Score points!"
   )
-  st.rerun()
+
+# Display last reward if available
+if "last_earned" in st.session_state:
+  st.info(
+      f"⚡ Last Mission Reward: +{st.session_state.last_earned} Energy Cells!"
+  )
