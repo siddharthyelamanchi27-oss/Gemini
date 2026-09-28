@@ -3,40 +3,39 @@ import streamlit as st
 
 # Page Configuration
 st.set_page_config(
-    page_title="Laser Ninja Arcade", page_icon="⚡", layout="centered"
+    page_title="Sci-Fi Arcade Arena", page_icon="⚡", layout="centered"
 )
 
-# Arcade Styling
+# Custom Styling
 st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(135deg, #1f4068, #162447, #1b1b2f);
+        background: linear-gradient(135deg, #0d0f18, #1a1c29, #25283d);
         color: white;
     }
     .stButton>button {
         width: 100%;
-        background: linear-gradient(45deg, #e94560, #f08a5d);
-        color: white;
+        background: linear-gradient(45deg, #00f2fe, #4facfe);
+        color: #0d0f18;
         font-weight: 900;
-        font-size: 1.2rem;
-        border-radius: 12px;
-        padding: 0.75rem;
-        border: 2px solid #fff;
-        box-shadow: 0px 4px 15px rgba(233, 69, 96, 0.5);
-        transition: 0.2s;
+        font-size: 1.1rem;
+        border-radius: 10px;
+        padding: 0.6rem;
+        border: none;
+        box-shadow: 0px 4px 15px rgba(0, 242, 254, 0.3);
     }
     .stButton>button:hover {
-        transform: scale(1.02);
-        background: linear-gradient(45deg, #f08a5d, #e94560);
+        background: linear-gradient(45deg, #4facfe, #00f2fe);
+        color: #000;
     }
-    .arena-box {
+    .arcade-card {
         background: rgba(255, 255, 255, 0.05);
-        border: 2px solid #e94560;
+        border: 2px solid #00f2fe;
         padding: 20px;
-        border-radius: 15px;
-        box-shadow: 0 0 20px rgba(233, 69, 96, 0.3);
+        border-radius: 12px;
         text-align: center;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
     }
     </style>
 """,
@@ -45,131 +44,184 @@ st.markdown(
 
 # Header
 st.markdown(
-    "<h1 style='text-align: center; color: #f08a5d; text-shadow: 0 0 10px"
-    " #f08a5d;'>⚡ LASER NINJA ARCADE ⚡</h1>",
+    "<h1 style='text-align: center; color: #00f2fe;'>⚡ SCI-FI ARCADE"
+    " ARENA ⚡</h1>",
     unsafe_allow_html=True,
 )
 st.markdown(
-    "<h3 style='text-align: center; color: #e94560;'>🔥 BATTLE THE"
-    " CYBER-THREATS! 🔥</h3>",
+    "<h4 style='text-align: center; color: #ff0844;'>SELECT YOUR CLASS &"
+    " UPGRADE YOUR GEAR</h4>",
     unsafe_allow_html=True,
 )
 st.markdown("---")
 
-# Threat Database
-threats = [
-    {
-        "name": "🤖 CYBER-ZOMBIE",
-        "desc": "A mechanical monster is charging right at you!",
-        "correct_move": "⚔️ Sword Slash",
-        "image": "🦾",
-    },
-    {
-        "name": "🔥 PLASMA DRAGON",
-        "desc": "Spitting a wave of burning digital fire!",
-        "correct_move": "🛡️ Energy Shield",
-        "image": "🐉",
-    },
-    {
-        "name": "☄️ METEOR SHOWER",
-        "desc": "Raining burning space rocks from above!",
-        "correct_move": "🏃‍♂️ Super Jump",
-        "image": "🌋",
-    },
-    {
-        "name": "👻 LASER GHOST",
-        "desc": "Phasing through walls with a blinding energy beam!",
-        "correct_move": "🛡️ Energy Shield",
-        "image": "⚡",
-    },
-]
-
-# Initialize Game State
+# Initialize Session State
+if "selected_class" not in st.session_state:
+  st.session_state.selected_class = "TITAN"
+if "energy_cells" not in st.session_state:
+  st.session_state.energy_cells = 50
 if "score" not in st.session_state:
   st.session_state.score = 0
-if "health" not in st.session_state:
-  st.session_state.health = 3
-if "streak" not in st.session_state:
-  st.session_state.streak = 0
-if "current_threat" not in st.session_state:
-  st.session_state.current_threat = random.choice(threats)
 
-threat = st.session_state.current_threat
+# Class Definitions & Upgrades
+classes_data = {
+    "TITAN": {
+        "icon": "🦾",
+        "desc": "Heavy melee powerhouse with high energy defense.",
+        "upgrades": {
+            "Power Swipe": {
+                "lvl": 1,
+                "max": 5,
+                "cost": 5,
+                "desc": "Wider swipe range",
+            },
+            "Vitality Drain": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 8,
+                "desc": "Chance to restore energy on hit",
+            },
+            "Turbo Surge": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 10,
+                "desc": "Attack rate boost",
+            },
+            "Armor Plating": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 12,
+                "desc": "Damage reduction shield",
+            },
+        },
+    },
+    "NEXUS": {
+        "icon": "⚡",
+        "desc": "Master of energy chains and time manipulation.",
+        "upgrades": {
+            "Plasma Chain": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 6,
+                "desc": "Chain energy links",
+            },
+            "Chrono Warp": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 10,
+                "desc": "Slow-motion duration boost",
+            },
+            "Static Field": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 8,
+                "desc": "Tick-damage aura",
+            },
+            "Barrier Core": {
+                "lvl": 1,
+                "max": 5,
+                "cost": 5,
+                "desc": "Faster shield recharge",
+            },
+        },
+    },
+    "MECH": {
+        "icon": "🤖",
+        "desc": "Cybernetic specialist loaded with thrusters and EMPs.",
+        "upgrades": {
+            "Jet Boost": {
+                "lvl": 1,
+                "max": 5,
+                "cost": 5,
+                "desc": "Faster dash cooldown",
+            },
+            "EMP Burst": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 10,
+                "desc": "Static explosion wave",
+            },
+            "Fragment Blast": {
+                "lvl": 0,
+                "max": 5,
+                "cost": 8,
+                "desc": "Releases energy shards",
+            },
+            "Turbo Drive": {
+                "lvl": 1,
+                "max": 5,
+                "cost": 7,
+                "desc": "Weapon swing frequency boost",
+            },
+        },
+    },
+}
+
+# Sidebar Class Selection
+st.sidebar.header("🕹️ ARCADE CONTROL")
+chosen_class = st.sidebar.selectbox(
+    "Choose Contender Class:", list(classes_data.keys())
+)
+st.session_state.selected_class = chosen_class
+
+current_data = classes_data[chosen_class]
 
 # HUD Display
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 with col1:
-  st.metric("🏆 SCORE", st.session_state.score)
+  st.metric("🔋 ENERGY CELLS", st.session_state.energy_cells)
 with col2:
-  st.metric("❤️ HEALTH", "💖" * st.session_state.health)
-with col3:
-  st.metric("🔥 STREAK", f"x{st.session_state.streak}")
+  st.metric("🏆 ARCADE SCORE", st.session_state.score)
 
 st.markdown("---")
 
-# Threat Arena Box
+# Display Class Card
 st.markdown(
     f"""
-    <div class="arena-box">
-        <h2>{threat['image']} {threat['name']}</h2>
-        <p style="font-size: 1.2rem; color: #ffecd2;">{threat['desc']}</p>
+    <div class="arcade-card">
+        <h2>{current_data['icon']} CLASS: {chosen_class}</h2>
+        <p style="color: #4facfe;">{current_data['desc']}</p>
     </div>
 """,
     unsafe_allow_html=True,
 )
 
-st.markdown("### 🎮 CHOOSE YOUR COMBAT MOVE:")
+st.markdown("### ⚙️ UPGRADE BAY")
 
-# Action Buttons
-moves = ["⚔️ Sword Slash", "🛡️ Energy Shield", "🏃‍♂️ Super Jump"]
-
-col_a, col_b, col_c = st.columns(3)
-
-player_choice = None
-with col_a:
-  if st.button(moves[0]):
-    player_choice = moves[0]
-with col_b:
-  if st.button(moves[1]):
-    player_choice = moves[1]
-with col_c:
-  if st.button(moves[2]):
-    player_choice = moves[2]
-
-# Handle Choice Logic
-if player_choice:
-  if player_choice == threat["correct_move"]:
-    st.balloons()
-    st.success("💥 PERFECT COUNTER! Enemy defeated!")
-    st.session_state.score += 100
-    st.session_state.streak += 1
-  else:
-    st.error(
-        f"❌ BAD MOVE! The threat required a **{threat['correct_move']}**!"
+# Upgrades Store Interface
+for upg_name, details in current_data["upgrades"].items():
+  cols = st.columns([3, 1, 1])
+  with cols[0]:
+    st.write(
+        f"**{upg_name}** (Lvl {details['lvl']}/{details['max']}) —"
+        f" *{details['desc']}*"
     )
-    st.session_state.health -= 1
-    st.session_state.streak = 0
+  with cols[1]:
+    cost = details["cost"] + (details["lvl"] * 5)
+    st.write(f"💎 {cost} Cells")
+  with cols[2]:
+    if details["lvl"] < details["max"]:
+      if st.button("UPGRADE", key=f"btn_{chosen_class}_{upg_name}"):
+        if st.session_state.energy_cells >= cost:
+          st.session_state.energy_cells -= cost
+          details["lvl"] += 1
+          st.success("Upgraded!")
+          st.rerun()
+        else:
+          st.error("Not enough cells!")
+    else:
+      st.markdown("✅ **MAX**")
 
-  # Check Game Over
-  if st.session_state.health <= 0:
-    st.error("💀 GAME OVER! Your health ran out!")
-    if st.button("🔄 PLAY AGAIN"):
-      st.session_state.score = 0
-      st.session_state.health = 3
-      st.session_state.streak = 0
-      st.session_state.current_threat = random.choice(threats)
-      st.rerun()
-  else:
-    # Next Threat
-    st.session_state.current_threat = random.choice(threats)
-    if st.button("⚡ NEXT ROUND"):
-      st.rerun()
-
-# Hard Reset Button
 st.markdown("---")
-if st.button("🔄 RESET GAME"):
-  st.session_state.score = 0
-  st.session_state.health = 3
-  st.session_state.streak = 0
-  st.session_state.current_threat = random.choice(threats)
+
+# Action Simulation Button
+if st.button("🚀 LAUNCH SIMULATION ARENA RUN"):
+  earned = random.randint(15, 35)
+  st.session_state.energy_cells += earned
+  st.session_state.score += 100
+  st.balloons()
+  st.success(
+      f"🎉 Simulation complete! Collected **{earned} Energy Cells** and 100"
+      " Score points!"
+  )
   st.rerun()
