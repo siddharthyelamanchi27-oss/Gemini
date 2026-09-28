@@ -1,172 +1,217 @@
 import random
 import streamlit as st
 
+# Page Configuration
 st.set_page_config(
-    page_title="Wild Data Arena", page_icon="⚡", layout="centered"
+    page_title="Wild Data Arena - Arcade", page_icon="🔥", layout="centered"
 )
 
+# Custom Arcade Styling & Animations
 st.markdown(
     """
     <style>
+    .stApp {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        color: white;
+    }
     .stButton>button {
         width: 100%;
-        background-color: #FF4B4B;
+        background: linear-gradient(45deg, #ff416c, #ff4b2b);
         color: white;
-        font-weight: bold;
+        font-weight: 900;
+        font-size: 1.2rem;
         border-radius: 12px;
         padding: 0.75rem;
-        font-size: 18px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: 2px solid #fff;
+        box-shadow: 0px 4px 15px rgba(255, 75, 43, 0.4);
+        transition: 0.2s;
     }
     .stButton>button:hover {
-        background-color: #FF6B6B;
+        transform: scale(1.02);
+        background: linear-gradient(45deg, #ff4b2b, #ff416c);
     }
-    .main {
-        background-color: #f8fafc;
+    .arcade-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 2px solid #00f2fe;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        text-align: center;
     }
     </style>
 """,
     unsafe_allow_html=True,
 )
 
-st.title("⚡ WILD DATA ARENA! ⚡")
+# Header
 st.markdown(
-    "### *Battle with real-world facts! Choose your power and conquer the"
-    " arena!*"
+    "<h1 style='text-align: center; color: #00f2fe; text-shadow: 0 0 10px"
+    " #00f2fe;'>🕹️ WILD DATA ARENA 🕹️</h1>",
+    unsafe_allow_html=True,
 )
+st.markdown(
+    "<h3 style='text-align: center; color: #ff0844;'>💥 BOSS BATTLE"
+    " EDITION 💥</h3>",
+    unsafe_allow_html=True,
+)
+st.markdown("---")
 
-fighters = [
+# Action Database: Extreme Stats & Bosses
+bosses = [
     {
-        "name": "🐨 The Super-Sleeper Koala",
-        "category": "Animal",
-        "stat_name": "Hours Slept Per Day",
-        "value": 20,
-        "unit": "hours",
-        "desc": (
-            "Spends most of its life in dreamland, waking up only to snack on"
-            " leaves!"
-        ),
+        "name": "🐨 THE KOALA SLEEP MONSTER",
+        "category": "ANIMAL BOSS",
+        "stat_name": "Daily Nap Time",
+        "value": 22,
+        "unit": "Hours",
+        "taunt": "I sleep through entire seasons, human! Try to match my laziness!",
+        "image": "💤",
     },
     {
-        "name": "🐌 The Tooth-Machine Snail",
-        "category": "Animal",
-        "stat_name": "Number of Teeth",
+        "name": "🐌 THE 14,000-TOOTH BEAST",
+        "category": "MUTANT SLUG",
+        "stat_name": "Teeth Count",
         "value": 14000,
-        "unit": "teeth",
-        "desc": (
-            "Has a tongue covered in thousands of microscopic teeth like a"
-            " conveyor belt!"
-        ),
+        "unit": "Teeth",
+        "desc": "Chewing everything in sight with a conveyor belt of doom!",
+        "taunt": "You can't brush fast enough for this smile!",
+        "image": "🦷",
     },
     {
-        "name": "🐋 The Mega-Blue Whale",
-        "category": "Animal",
+        "name": "🐋 BLUE WHALE TITAN",
+        "category": "OCEAN COLOSSUS",
         "stat_name": "Tongue Weight",
         "value": 7000,
-        "unit": "pounds",
-        "desc": "Its tongue alone weighs as much as an entire adult elephant!",
+        "unit": "Pounds",
+        "desc": "My tongue alone weighs as much as a heavy truck!",
+        "taunt": "I'm too heavy for your scoreboard!",
+        "image": "🌊",
     },
     {
-        "name": "🪐 The Floating Saturn",
-        "category": "Space",
-        "stat_name": "Density vs Water Scale",
+        "name": "🪐 SATURN THE SPACE FLOAT",
+        "category": "PLANETARY ALIEN",
+        "stat_name": "Bathtub Float Level",
         "value": 1,
-        "unit": "Bathtub Float Status (1=Yes)",
-        "desc": (
-            "Made mostly of gas, meaning it would float if you had a big"
-            " enough bathtub!"
-        ),
+        "unit": "Status (1=Yes)",
+        "desc": "Made of gas—ready to float in a cosmic bathtub!",
+        "taunt": "Catch me if you can, I'm floating away!",
+        "image": "🛸",
     },
     {
-        "name": "☁️ The Heavy Cloud",
-        "category": "Weather",
-        "stat_name": "Weight of 1 Fluffy Cloud",
+        "name": "☁️ MEGA-CLOUD 9000",
+        "category": "SKY TORNADO",
+        "stat_name": "Cloud Weight",
         "value": 1100000,
-        "unit": "pounds",
-        "desc": (
-            "Looks light as a feather, but it's packed with millions of"
-            " gallons of water drops!"
-        ),
+        "unit": "Pounds",
+        "desc": "Looks fluffy, but packs a million pounds of rain power!",
+        "taunt": "I'm about to rain destruction on your score!",
+        "image": "⚡",
     },
     {
-        "name": "⏳ Time-Bending Venus",
-        "category": "Space",
-        "stat_name": "Hours in a Planet Day",
+        "name": "⏳ VENUS TIME-WARP",
+        "category": "TIME MASTER",
+        "stat_name": "Hours in a Day",
         "value": 5832,
-        "unit": "hours",
-        "desc": (
-            "Spins so slowly that its day is actually longer than its whole"
-            " year!"
-        ),
+        "unit": "Hours",
+        "desc": "Spins so slow that a single day takes longer than a year!",
+        "taunt": "Time means nothing to my slow-motion spin!",
+        "image": "🌀",
     },
 ]
 
+# Initialize Game State
 if "score" not in st.session_state:
   st.session_state.score = 0
+if "streak" not in st.session_state:
+  st.session_state.streak = 0
 if "round" not in st.session_state:
   st.session_state.round = 1
-if "current_fighter" not in st.session_state:
-  st.session_state.current_fighter = random.choice(fighters)
-  st.session_state.secret_target = st.session_state.current_fighter["value"]
+if "current_boss" not in st.session_state:
+  st.session_state.current_boss = random.choice(bosses)
 
-fighter = st.session_state.current_fighter
+boss = st.session_state.current_boss
 
-st.markdown(f"### 🔥 Round {st.session_state.round} | Score: 🏆 {st.session_state.score}")
+# HUD Display
+col_hud1, col_hud2, col_hud3 = st.columns(3)
+with col_hud1:
+  st.metric("🏆 SCORE", st.session_state.score)
+with col_hud2:
+  st.metric("🔥 STREAK", f"x{st.session_state.streak}")
+with col_hud3:
+  st.metric("⚡ STAGE", st.session_state.round)
+
 st.markdown("---")
 
-col1, col2 = st.columns(2)
-with col1:
-  st.markdown(f"**Contender:** {fighter['name']}")
-  st.markdown(f"**Category:** {fighter['category']}")
-with col2:
-  st.markdown(f"**Special Stat:** {fighter['stat_name']}")
+# Boss Arena Box
+st.markdown(
+    f"""
+    <div class="arcade-box">
+        <h2>{boss['image']} {boss['name']}</h2>
+        <p style="color: #00f2fe; font-weight: bold; font-size: 1.1rem;">CLASS: {boss['category']}</p>
+        <p style="font-style: italic; color: #ffecd2;">"{boss['taunt']}"</p>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
-st.info(f"💡 **Mission Briefing:** {fighter['desc']}")
+st.markdown(f"### 🎯 MISSION: Guess the **{boss['stat_name']}** ({boss['unit']})!")
 
-st.markdown(f"#### Can you guess the exact **{fighter['stat_name']}** ({fighter['unit']})?")
-
-max_val = int(fighter["value"] * 2) if fighter["value"] > 1 else 10
-user_guess = st.slider(
-    "Slide to lock in your power level:",
+# Dynamic Slider
+max_limit = int(boss["value"] * 2) if boss["value"] > 1 else 10
+player_guess = st.slider(
+    "POWER SLIDER:",
     min_value=0,
-    max_value=max_val,
-    value=int(fighter["value"] / 2),
+    max_value=max_limit,
+    value=int(boss["value"] / 2),
     step=1,
 )
 
-if st.button("🚀 LAUNCH GUESS!"):
-  target = st.session_state.secret_target
-  difference = abs(user_guess - target)
+# Attack Button
+if st.button("💥 STRIKE WITH GUESS!"):
+  target_val = boss["value"]
+  difference = abs(player_guess - target_val)
 
-  if user_guess == target:
+  if player_guess == target_val:
     st.balloons()
-    st.success(
-        f"🎯 BULLSEYE! Absolute perfection! The exact value was"
-        f" **{target} {fighter['unit']}**!"
+    st.markdown(
+        "<h2 style='text-align: center; color: #00ff00;'>⚡ CRITICAL HIT!"
+        " BULLSEYE! ⚡</h2>",
+        unsafe_allow_html=True,
     )
-    st.session_state.score += 10
-  elif difference <= max(1, target * 0.2):
-    st.success(
-        f"🔥 SO CLOSE, HERO! You were right on the edge. The actual stat was"
-        f" **{target} {fighter['unit']}**!"
+    st.session_state.score += 50
+    st.session_state.streak += 1
+  elif difference <= target_val * 0.15:
+    st.markdown(
+        "<h2 style='text-align: center; color: #00f2fe;'>🔥 SUPER EFFECTIVE!"
+        " SO CLOSE! 🔥</h2>",
+        unsafe_allow_html=True,
     )
-    st.session_state.score += 5
+    st.session_state.score += 25
+    st.session_state.streak += 1
   else:
-    st.warning(
-        f"💥 BOOM! Wild guess, but the real data was **{target}"
-        f" {fighter['unit']}**!"
+    st.markdown(
+        "<h2 style='text-align: center; color: #ff4b2b;'>💥 BOSS COUNTERED!"
+        " YOU MISSED! 💥</h2>",
+        unsafe_allow_html=True,
     )
+    st.session_state.streak = 0
 
+  st.info(
+      f"🛡️ **Boss Real Stat:** {target_val} {boss['unit']}! — {boss['desc']}"
+  )
+
+  # Next Stage setup
   st.session_state.round += 1
-  st.session_state.current_fighter = random.choice(fighters)
-  st.session_state.secret_target = st.session_state.current_fighter["value"]
+  st.session_state.current_boss = random.choice(bosses)
 
-  if st.button("⚡ NEXT BATTLE"):
+  if st.button("🚀 NEXT BOSS STAGE"):
     st.rerun()
 
-if st.button("🔄 Reset Arena"):
+# Reset Arcade Button
+st.markdown("---")
+if st.button("🔄 HARD RESET ARCADE"):
   st.session_state.score = 0
+  st.session_state.streak = 0
   st.session_state.round = 1
-  st.session_state.current_fighter = random.choice(fighters)
-  st.session_state.secret_target = st.session_state.current_fighter["value"]
+  st.session_state.current_boss = random.choice(bosses)
   st.rerun()
